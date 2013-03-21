@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ObjectRenderer</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="lib/ObjectRenderer.js"></script>
+	<link rel="stylesheet" href="lib/ObjectRenderer.css">
+
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<h1>ObjectRenderer</h1>
+
+	<p>When debugging, it's useful sometimes to be able to render a javascript into html and place it in the dom
+	somewhere.  This makes that easy, and supports some extra features like styling the elements based on type
+	and providing summary versions that can be clicked to drill into the objects.</p>
+
+	<p>Include the <code>ObjectRenderer.css</code> and <code>ObjectRenderer.js</code> in your html like so:</p>
+	<pre>
+	&lt;script type="text/javascript" src="lib/ObjectRenderer.js"&gt;&lt;/script&gt;
+	&lt;link rel="stylesheet" href="lib/ObjectRenderer.css"&gt;
+	</pre>
+
+	<p>Then you can write code like the following to get a dom element that represents an object:</p>
+	<pre>
+	var obj = {
+		"hello": "there",
+		"boom": {
+			inner: 23
+		},
+		"other": undefined,
+		"this": false,
+		"thingy": [1, 23, 4, {a:1, b:2}],
+		meaning: 42,
+		func: function() {
+			console.log('hi');
+		},
+		temp: new TypeError("Oh dear")
+	};
+	obj.boom.recursive = obj;
+	obj.xxx = obj.boom;
+
+	var or = new ObjectRenderer();
+
+	document.body.appendChild(or.getElement(obj));
+	</pre>
+	<script type="text/javascript">
+		var obj = {
+			"hello": "there",
+			"boom": {
+				inner: 23
+			},
+			"other": undefined,
+			"this": false,
+			"thingy": [1, 23, 4, {a:1, b:2}],
+			meaning: 42,
+			func: function() {
+				console.log('hi');
+			},
+			temp: new TypeError("Oh dear")
+		};
+		obj.boom.recursive = obj;
+		obj.xxx = obj.boom;
+
+		var renderer = new ObjectRenderer();
+
+		document.body.appendChild(renderer.getElement(obj));
+	</script>
+
+	<p>A nice bonus feature is the ability to use it for logging messages, like so:</p>
+
+	<pre>
+	var renderer = new ObjectRenderer();
+	function log() {
+		document.body.appendChild(renderer.getLogElement.apply(renderer, arguments));
+	}
+
+	log("Hello {0}, it's a great day for {1}. Here's an object: {2}", "Bob", "fishing", obj);
+	log("As you can see, the first argument is a pattern and objects can get replaced into it.");
+	</pre>
+
+	<script type="text/javascript">
+		var renderer = new ObjectRenderer();
+		function log() {
+			document.body.appendChild(renderer.getLogElement.apply(renderer, arguments));
+		}
+
+		log("Hello {0}, it's a great day for {1}. Here's an object: {2}", "Bob", "fishing", obj);
+		log("As you can see, the first argument is a pattern and objects can get replaced into it.");
+	</script>
+
+</body>
+</html>
